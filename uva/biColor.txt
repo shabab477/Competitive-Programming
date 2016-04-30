@@ -1,0 +1,121 @@
+/* package whatever; // don't place package name! */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+/* Name of the class has to be "Main" only if the class is public. */
+public class Main
+{
+	static int discover[];
+	static ArrayList array[];
+	static int depth[];
+	
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		Scanner sc = new Scanner(System.in);
+		
+		int n = sc.nextInt();
+		while(n != 0)
+		{
+			int m = sc.nextInt();
+			array = new ArrayList[n];
+			discover = new int[n];
+			depth = new int[n];
+			
+			for(int c = 0; c < n; c++)
+			{
+				array[c] = new ArrayList();
+			}
+			
+			for(int c = 0; c < m; c++)
+			{
+				int from = sc.nextInt();
+				int to = sc.nextInt();
+				
+				array[from].add(new Node(to));
+			}
+			
+			boolean flag = true;
+			for(int c = 0; c < n; c++)
+			{
+				if(discover[c] == 0)
+				{
+					depth = new int[n];
+					discover = new int[n];
+					if(!bfs(c))
+					{
+						flag = false;
+						break;
+					}
+				}
+			}
+			
+			if(flag)
+			{
+				System.out.println("BICOLORABLE.");
+			}
+			else
+			{
+				System.out.println("NOT BICOLORABLE.");
+			}
+			n = sc.nextInt();
+		}
+		
+	}
+		static boolean bfs(int start)
+		{
+			Queue<Node> q = new LinkedList<Node>();
+			
+			q.add(new Node(start));
+			discover[start] = 1;
+			depth[start] = 0;
+			
+			//System.out.println(q.isEmpty());
+			while(!q.isEmpty())
+			{
+				
+				int u = q.remove().value;
+				int sz = array[u].size();
+				
+				
+				for(int c = 0; c < sz; c++)
+				{
+					Node n = (Node)array[u].get(c);
+					if(discover[n.value] == 0)
+					{
+						//System.out.println("here");
+						q.add(new Node(n.value));
+						discover[n.value] = 1;
+						depth[n.value] = depth[u] + 1;
+						
+					}
+					else
+					{
+						if((depth[u] % 2 == 0 && depth[n.value] % 2 == 0) || (depth[u] % 2 == 1 && depth[n.value] % 2 == 1))
+						{
+							//System.out.println("here");
+							return false;
+						}
+					}
+					
+				}
+			}
+			return true;	
+		}
+		
+		
+		
+	}
+
+
+
+class Node
+{
+	int value;
+	
+	Node(int v)
+	{
+		value = v;
+	}
+}

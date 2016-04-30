@@ -1,0 +1,114 @@
+/* package whatever; // don't place package name! */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+/* Name of the class has to be "Main" only if the class is public. */
+public class Main
+{
+	static int discover[];
+	static ArrayList array[];
+	static int depth[];
+	
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		Scanner sc = new Scanner(System.in);
+		
+		int test = sc.nextInt();
+		for(int t = 0; t < test; t++)
+		{
+			int n = sc.nextInt();
+			int m = sc.nextInt();
+			array = new ArrayList[n];
+			discover = new int[n];
+			depth = new int[n];
+			
+			for(int c = 0; c < n; c++)
+			{
+				array[c] = new ArrayList();
+			}
+			
+			for(int c = 0; c < m; c++)
+			{
+				int from = sc.nextInt();
+				int to = sc.nextInt();
+				
+				array[from].add(new Node(to));
+				array[to].add(new Node(from));
+			}
+			
+			//boolean flag = true;
+			for(int c = 0; c < n; c++)
+			{
+				if(discover[c] == 0)
+				{
+					
+					bfs(c);
+					
+				}
+			}
+			
+			
+			
+			for(int c = 1; c < n; c++)
+			{
+				System.out.println(depth[c]);
+			}
+			
+			if(t != test - 1)
+			{
+				System.out.println();
+			}
+		}
+		
+	}
+		static void bfs(int start)
+		{
+			Queue<Node> q = new LinkedList<Node>();
+			
+			q.add(new Node(start));
+			discover[start] = 1;
+			depth[start] = 0;
+			
+			//System.out.println(q.isEmpty());
+			while(!q.isEmpty())
+			{
+				
+				int u = q.remove().value;
+				int sz = array[u].size();
+				
+				
+				for(int c = 0; c < sz; c++)
+				{
+					Node n = (Node)array[u].get(c);
+					if(discover[n.value] == 0)
+					{
+						//System.out.println("here");
+						q.add(new Node(n.value));
+						discover[n.value] = 1;
+						depth[n.value] = depth[u] + 1;
+						
+					}
+					
+					
+				}
+			}
+				
+		}
+		
+		
+		
+	}
+
+
+
+class Node
+{
+	int value;
+	
+	Node(int v)
+	{
+		value = v;
+	}
+}

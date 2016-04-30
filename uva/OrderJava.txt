@@ -1,0 +1,123 @@
+/* package whatever; // don't place package name! */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+/* Name of the class has to be "Main" only if the class is public. */
+public class Main
+{
+	
+	static int discover[];
+	static Node f[];
+	static ArrayList array[];
+	static int indeg[];
+	static int time = 0;
+	
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		int n, m = 0;
+		Scanner sc = new Scanner(System.in);
+		
+		n = sc.nextInt();
+		m = sc.nextInt();
+		
+		while(n != 0 || m != 0)
+		{
+			discover = new int[n + 1];
+			f = new Node[n];
+			array = new ArrayList[n + 1];
+			indeg = new int[n + 1];
+			time = 0;
+			
+			for(int c = 1; c < n + 1; c++)
+			{
+				discover[c] = -1;
+				f[c - 1] = new Node(c, 0);
+				array[c] = new ArrayList<Node>();
+				indeg[c] = 0;
+			}
+			
+			for(int c = 0; c < m; c++)
+			{
+				int before = sc.nextInt();
+				int after = sc.nextInt();
+				
+				indeg[after]++;
+				array[before].add(new Node(after, 0));
+			}
+			
+			int start = 0;
+			
+			for(int c = 1; c < n + 1; c++)
+			{
+				if(indeg[c] == 0)
+				{
+					dfs(c);
+				}
+			}
+			
+			//System.out.print(Arrays.toString(discover));
+			Arrays.sort(f);
+			
+			boolean flag = true;
+			for(int c = 0; c < n; c++)
+			{
+				if(flag)
+				{
+					System.out.print(f[c].value);
+					flag = false;
+				}
+				else
+				{
+					System.out.print(" " + f[c].value);
+				}
+				
+			}
+			
+			System.out.println();
+			n = sc.nextInt();
+			m = sc.nextInt();
+			
+		}
+	}
+	
+	static void dfs(int start)
+	{
+		time = time + 1;
+		discover[start] = 1;
+		
+		int size = array[start].size();
+		
+		for(int c = 0; c < size; c++)
+		{
+			Node n = (Node)array[start].get(c);
+			if(discover[n.value] == -1)
+			{
+				discover[n.value] = 1;
+				dfs(n.value);
+			}
+		}
+		
+		time = time + 1;
+		f[start - 1].fin = time;
+	}
+	
+}
+
+class Node implements Comparable<Node>
+{
+	int value = 0;
+	int fin = 0;
+	
+	Node(int v, int f)
+	{
+		fin = f;
+		value = v;
+	}
+	
+	public int compareTo(Node n)
+	{
+		return n.fin - this.fin;
+	}
+}
